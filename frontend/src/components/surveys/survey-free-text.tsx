@@ -1,29 +1,34 @@
-import { CheckboxVisibility, DetailsList, Stack } from "@fluentui/react";
-import { FunctionComponent } from "react";
+import { type FunctionComponent, memo } from 'react';
+import { CheckboxVisibility, DetailsList, Stack } from '@fluentui/react';
+import useFreeTextSurvey from '../../hooks/useFreeTextSurvey';
+import type { FreeTextQuestion } from '../../hooks/useSurvey';
 
-export const SurveyFreeText: FunctionComponent = () => {
-  const items = ["First item in list", "another one"];
+interface SurveyFreeTextProps {
+  questions: FreeTextQuestion[];
+}
 
-  const _onRenderColumn = (item?: any) => {
-    return <div data-is-focusable={true}>{item}</div>;
-  };
+const SurveyFreeText: FunctionComponent<SurveyFreeTextProps> = ({ questions }) => {
+  const { getItems, getGroups, getColumns } = useFreeTextSurvey(questions);
+
   return (
     <Stack data-testid="FreeTextTable">
       <DetailsList
         checkboxVisibility={CheckboxVisibility.hidden}
-        items={items}
-        columns={[{ key: "Free text", name: "Free text", minWidth: 200 }]}
+        items={getItems()}
+        columns={getColumns()}
+        groups={getGroups()}
         ariaLabelForSelectAllCheckbox="Toggle selection for all items"
         ariaLabelForSelectionColumn="Toggle selection"
-        checkButtonAriaLabel="select row"
-        checkButtonGroupAriaLabel="select section"
+        checkButtonAriaLabel="Select row"
+        checkButtonGroupAriaLabel="Select section"
         groupProps={{
           isAllGroupsCollapsed: true,
           showEmptyGroups: true,
         }}
-        onRenderItemColumn={_onRenderColumn}
         compact={true}
       />
     </Stack>
   );
 };
+
+export default memo(SurveyFreeText);
